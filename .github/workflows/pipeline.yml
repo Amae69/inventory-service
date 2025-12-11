@@ -10,26 +10,38 @@ on:
       - main
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      image_name: ${{ steps.image_name.outputs.value }}
+    steps:
+      - name: Construct Image Name
+        id: image_name
+        run: |
+          OWNER="${{ github.repository_owner }}"
+          IMAGE="ghcr.io/${OWNER,,}/inventory-service:${{ github.sha }}"
+          echo "value=$IMAGE" >> "$GITHUB_OUTPUT"
+
   tests:
     uses: Amae69/platform-ci/.github/workflows/go-matrix-test.yml@main
     with:
       working-directory: "."
     
   docker:
-    needs: tests
+    needs: [tests, setup]
     uses: Amae69/platform-ci/.github/workflows/build-and-push-image.yml@main
     with:
-      image-name: "ghcr.io/${{ github.repository_owner }}/inventory-service:${{ github.sha }}"
+      image-name: ${{ needs.setup.outputs.image_name }}
     secrets:
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       
   deploy-staging:
-    needs: docker
+    needs: [docker, setup]
     if: github.ref == 'refs/heads/main'
     uses: Amae69/platform-ci/.github/workflows/deploy-k8s.yml@main
     with:
-      image: "ghcr.io/${{ github.repository_owner }}/inventory-service:${{ github.sha }}"
+      image: ${{ needs.setup.outputs.image_name }}
       namespace: "inventory-staging"
       deployment: "inventory-service"
     secrets:
