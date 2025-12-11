@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Inventory Service
 
 A lightweight Golang API that exposes `/items` and `/status` endpoints.
@@ -61,3 +62,7 @@ go run main.go
 go test ./...
 ```
 ## End ...
+=======
+# inventory-service
+This repository uses a comprehensive CI/CD pipeline defined in .github/workflows/pipeline.yml It leverages reusable workflows to ensure consistency and best practices.
+>>>>>>> ba85dd46098cc565cebdf0ce994e3bb13da584da
