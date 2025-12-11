@@ -1,0 +1,36 @@
+name: Inventory Service Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    uses: Amae69/platform-ci/.github/workflows/go-matrix-test.yml@main
+    with:
+      working-directory: "."
+    
+  docker:
+    needs: tests
+    uses: Amae69/platform-ci/.github/workflows/build-and-push-image.yml@main
+    with:
+      image-name: "ghcr.io/${{ github.repository_owner }}/inventory-service:${{ github.sha }}"
+    secrets:
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      
+  deploy-staging:
+    needs: docker
+    if: github.ref == 'refs/heads/main'
+    uses: Amae69/platform-ci/.github/workflows/deploy-k8s.yml@main
+    with:
+      image: "ghcr.io/${{ github.repository_owner }}/inventory-service:${{ github.sha }}"
+      namespace: "inventory-staging"
+      deployment: "inventory-service"
+    secrets:
+      KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_STAGING }}
