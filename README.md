@@ -60,5 +60,4 @@ go run main.go
 ```bash
 go test ./...
 ```
-## End ...
-
+## End ..
