@@ -47,3 +47,5 @@ jobs:
       create_local_cluster: true
     secrets:
       KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_STAGING }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
