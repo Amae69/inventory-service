@@ -44,5 +44,6 @@ jobs:
       image: ${{ needs.setup.outputs.image_name }}
       namespace: "inventory-staging"
       deployment: "inventory-service"
+      create_local_cluster: true
     secrets:
       KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_STAGING }}
