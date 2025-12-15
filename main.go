@@ -8,7 +8,7 @@ import (
 
 func main() {
 	http.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("OK"))
+		w.Write([]byte("My Golang API that exposes items and status endpoints is successful"))
 	})
 	http.HandleFunc("/items", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode([]string{
