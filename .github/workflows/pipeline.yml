@@ -45,6 +45,7 @@ jobs:
       namespace: "inventory-staging"
       deployment: "inventory-service"
       create_local_cluster: true
+      port: 8080
     secrets:
       KUBECONFIG_CONTENT: ${{ secrets.KUBECONFIG_STAGING }}
       REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
